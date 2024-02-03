@@ -1,0 +1,56 @@
+[
+  {
+    "description": "日付",
+    "mode": "REQUIRED",
+    "name": "date",
+    "type": "DATE"
+  },
+  {
+    "description": "内容",
+    "mode": "NULLABLE",
+    "name": "content",
+    "type": "STRING"
+  },
+  {
+    "description": "金額",
+    "mode": "REQUIRED",
+    "name": "price",
+    "type": "INTEGER"
+  },
+  {
+    "description": "金融機関",
+    "mode": "NULLABLE",
+    "name": "financial_institution",
+    "type": "STRING"
+  },
+  {
+    "description": "大項目",
+    "mode": "REQUIRED",
+    "name": "root_category",
+    "type": "STRING"
+  },
+  {
+    "description": "中項目",
+    "mode": "NULLABLE",
+    "name": "child_category",
+    "type": "STRING"
+  },
+  {
+    "description": "メモ",
+    "mode": "NULLABLE",
+    "name": "note",
+    "type": "STRING"
+  },
+  {
+    "description": "振替フラグ",
+    "mode": "REQUIRED",
+    "name": "transfer_flag",
+    "type": "BOOLEAN"
+  },
+  {
+    "description": "MFレコードID",
+    "mode": "NULLABLE",
+    "name": "record_id",
+    "type": "STRING"
+  }
+]

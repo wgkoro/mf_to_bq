@@ -5,7 +5,7 @@ help:
 	@echo "Usage:"
 	@echo "  make create    Create Bq sql file"
 	@echo "  make insert	Insert data to Bq"
-	@echo "  make apply	Create sql file, and insert to Bq"
+	@echo "  make apply     Create sql file, and insert to Bq table"
 
 .PHONY: create
 create:
