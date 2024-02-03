@@ -3,55 +3,68 @@
 require 'csv'
 require 'time'
 
-unless File.exist?('./files/mf.csv')
+DATASET_NAME = 'data_lake'
+TABLE_NAME = 'household_budgets'
+
+MF_FILE_PATH = './files/mf.csv'.freeze
+BQ_SQL_FILE_PATH = './files/bq.sql'.freeze
+
+def parse_date(date)
+  Time.parse(date).strftime('%Y-%m-%d')
+end
+
+def parse_transfer_flag(transfer)
+  transfer.to_i.zero? ? false : true
+end
+
+def parse_price(price)
+  number = price.to_i
+  number.negative? ? number * -1 : number
+end
+
+def format_record_item(item)
+  '"%s"'.sub('%s', item)
+end
+
+def generate_query_values(csv_file_path, values = [])
+  CSV.foreach(csv_file_path, headers: true, encoding: 'Shift_JIS:UTF-8') do |row|
+    records = [
+      format_record_item(parse_date(row['日付'])),
+      format_record_item(row['内容']),
+      parse_price(row['金額（円）']),
+      format_record_item(row['保有金融機関']),
+      format_record_item(row['大項目']),
+      format_record_item(row['中項目']),
+      format_record_item(row['メモ']),
+      parse_transfer_flag(row['振替']),
+      format_record_item(row['ID']),
+    ]
+
+    values << "(#{records.join(', ')})"
+  end
+
+  values
+end
+
+unless File.exist?(MF_FILE_PATH)
   puts 'MoneyForwardのCSVファイル(mf.csv)が見つかりません'
   exit 1
 end
 
-base_query = 'INSERT INTO data_lake.household_budgets (date, content, price, financial_institution, root_category, child_category, note, transfer_flag, record_id) VALUES '
-values = []
-
-CSV.foreach('./files/mf.csv', headers: true, encoding: 'Shift_JIS:UTF-8') do |arr|
-  date = Time.parse(arr['日付'])
-  date_bq = date.strftime('%Y-%m-%d')
-  content = arr['内容']
-
-  price = arr['金額（円）'].to_i
-  amount = price.negative? ? price * -1 : price
-
-  financial =  arr['保有金融機関']
-  root_category = arr['大項目']
-  child_category = arr['中項目']
-  note = arr['メモ']
-  transfer_flag = arr['振替'].to_i.zero? ? false : true
-  record_id = arr['ID']
-
-  records = [
-    '"%s"'.sub('%s', date_bq),
-    '"%s"'.sub('%s', content),
-    amount,
-    '"%s"'.sub('%s', financial),
-    '"%s"'.sub('%s', root_category),
-    '"%s"'.sub('%s', child_category),
-    '"%s"'.sub('%s', note),
-    transfer_flag,
-    '"%s"'.sub('%s', record_id),
-  ]
-  values << "(#{records.join(', ')})"
-end
-
-
-sql_file = './files/bq.sql'
-if File.exist?(sql_file)
+if File.exist?(BQ_SQL_FILE_PATH)
   puts '古いsqlファイルが見つかりました。削除します'
-  File.delete(sql_file)
+  File.delete(BQ_SQL_FILE_PATH)
 end
 
 puts 'sqlファイルを作成します'
 
+base_query = "INSERT INTO #{DATASET_NAME}.#{TABLE_NAME} (date, content, price, financial_institution, root_category, child_category, note, transfer_flag, record_id) VALUES "
+values = generate_query_values(MF_FILE_PATH)
+
 sql = "#{base_query}\n#{values.join(",\n")}\n;"
-File.open(sql_file, 'w') do |file|
+File.open(BQ_SQL_FILE_PATH, 'w') do |file|
   file.puts sql
 end
 
 puts '作成完了'
+
