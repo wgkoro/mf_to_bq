@@ -3,6 +3,11 @@
 require 'csv'
 require 'time'
 
+unless File.exist?('./files/mf.csv')
+  puts 'MoneyForwardのCSVファイル(mf.csv)が見つかりません'
+  exit 1
+end
+
 base_query = 'INSERT INTO data_lake.household_budgets (date, content, price, financial_institution, root_category, child_category, note, transfer_flag, record_id) VALUES '
 values = []
 
