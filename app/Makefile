@@ -9,7 +9,7 @@ help:
 
 .PHONY: create
 create:
-	@(ruby to_sql.rb)
+	@(ruby main.rb)
 
 .PHONY: insert
 insert:
