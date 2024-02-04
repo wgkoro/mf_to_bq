@@ -3,8 +3,8 @@
 require 'csv'
 require 'time'
 
-DATASET_NAME = 'data_lake'
-TABLE_NAME = 'household_budgets'
+DATASET_NAME = ENV['DATASET_NAME']
+TABLE_NAME = ENV['TABLE_NAME']
 
 MF_FILE_PATH = './files/mf.csv'.freeze
 BQ_SQL_FILE_PATH = './files/bq.sql'.freeze
@@ -67,4 +67,3 @@ File.open(BQ_SQL_FILE_PATH, 'w') do |file|
 end
 
 puts '作成完了'
-

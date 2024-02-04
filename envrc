@@ -1,0 +1,2 @@
+export DATASET_NAME=
+export TABLE_NAME=

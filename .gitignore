@@ -29,3 +29,6 @@ Temporary Items
 # data files
 *.sql
 *.csv
+
+# env file
+.envrc
