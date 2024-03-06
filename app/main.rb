@@ -23,7 +23,7 @@ def parse_price(price)
 end
 
 def format_record_item(item)
-  '"%s"'.sub('%s', item)
+  '"%s"'.sub('%s', item.gsub(/\r\n|\r|\n/, ''))
 end
 
 def generate_query_values(csv_file_path, values = [])
