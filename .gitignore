@@ -28,6 +28,7 @@ Temporary Items
 
 # data files
 *.sql
+*.bak
 *.csv
 
 # env file
