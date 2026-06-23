@@ -11,21 +11,21 @@ help:
 
 .PHONY: validate
 validate:
-	@(ruby main.rb validate)
+	@(dotenvx run -- ruby main.rb validate;)
 
 .PHONY: create
 create:
-	@(ruby main.rb)
+	@(dotenvx run -- ruby main.rb;)
 
 .PHONY: validate_sql
 validate_sql:
 	@(echo "Start validating generated SQL by dry run")
-	@(bq query --dry_run --use_legacy_sql=false < ./files/bq.sql)
+	@(dotenvx run -- bq query --dry_run --use_legacy_sql=false < ./files/bq.sql;)
 
 .PHONY: insert
 insert:
 	@(echo "Start inserting data to Bq")
-	@(bq query -use_legacy_sql=false < ./files/bq.sql)
+	@(dotenvx run -- bq query -use_legacy_sql=false < ./files/bq.sql;)
 
 .PHONY: apply
 apply: validate create validate_sql insert

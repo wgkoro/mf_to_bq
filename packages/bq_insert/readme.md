@@ -12,7 +12,7 @@ Ruby script generates "Insert SQL file" from MoneyForward CSV.
 
 1. Prepare BiqQuery table
    1. You can find table definition example from `docs/bq_schema.json`
-1. Make .envrc file from "envrc" `cp envrc .envrc`
+1. Make .envrc file from "envrc" `cp .env.example .env`
 1. Write your BigQuery dataset name, table name to .envrc
 
 # Usage
